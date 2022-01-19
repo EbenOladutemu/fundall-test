@@ -1,5 +1,7 @@
 <template>
-  <button type="submit">SIGN UP</button>
+  <button type="submit">
+    <slot></slot>
+  </button>
 </template>
 
 <script>
@@ -8,7 +10,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 button {
   padding: 1rem;
   width: 100%;
@@ -16,6 +18,10 @@ button {
   border: none;
   border-radius: 4px;
   box-shadow: 0px 4px 10px rgba(118, 212, 45, 30%);
-  letter-spacing: 1px;
+  letter-spacing: $spacing;
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 </style>
