@@ -186,6 +186,9 @@
         }
       }
     },
+    mounted() {
+      document.title = 'Signup - Fundall';
+    },
     beforeDestroy() {
       this.resetSignUp();
     }

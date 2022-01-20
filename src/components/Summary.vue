@@ -12,6 +12,12 @@
         <span class="text-green">₦30,000</span>
       </div>
     </div>
+    <p class="controls text-center">
+      <span>1</span>
+      of 5
+      <span class="prev-next">&#8249;</span>
+      <span class="prev-next">&#8250;</span>
+    </p>
   </div>
 </template>
 
@@ -21,7 +27,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .summary {
   width: 50%;
   box-shadow: 0px 0px 6px rgba(77, 232, 151, 0.19);
@@ -37,6 +43,21 @@ export default Vue.extend({
 .items {
   padding-bottom: 2rem;
   border-bottom: 0.5px solid #E3ECE5;
+}
+
+.controls {
+  span:first-child {
+    border: 1px solid #A4B0A3;
+    padding: 0px 6px;
+    border-radius: 4px;
+  }
+  .prev-next {
+    padding: 0px 8px;
+    background: $green;
+    border-radius: 50%;
+    color: #fff;
+    margin-right: 0.5rem;
+  }
 }
 
 hr {

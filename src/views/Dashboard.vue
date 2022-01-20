@@ -5,10 +5,10 @@
         <Welcome>
           <template>
             <div class="d-flex">
-              <img class="avatar" src="./../assets/images/user.svg" alt="Avatar">
+              <img class="avatar" :src="avatar" alt="Avatar">
               <div class="profile">
-                <h3>Ebenexzer</h3>
-                <h4>emaol@,so,com</h4>
+                <h3>{{ firstname }} {{ lastname }}</h3>
+                <h4>{{ email }}</h4>
               </div>
             </div>
             <div class="target">
@@ -18,7 +18,9 @@
                 <div></div>
               </div>
             </div>
-            <Summary></Summary>
+            <Summary>
+
+            </Summary>
           </template>
         </Welcome>
       </template>
@@ -27,18 +29,17 @@
           <img class="skate-guy" src="./../assets/images/dashboard.svg" alt="Signup">
           <div class="welcome-back">
             <h2>
-              <span class="text-green">Welcome back,</span> .
+              <span class="text-green">Welcome back, </span>{{ firstname }}.
             </h2>
             <span>
               Now, let’s get your expenses for this month
             </span>
           </div>
-          <form @submit.prevent="passwordMatchCheck">
+          <form @submit.prevent="">
             <div class="d-flex flex-column-rev">
               <input
                 type="number"
                 required
-                v-model="formData.email"
               />
               <span>Target Monthly Expenses</span>
             </div>
@@ -46,7 +47,6 @@
               <input
                 type="date"
                 required
-                v-model="formData.email"
               />
               <span>Date</span>
             </div>
@@ -106,7 +106,12 @@
       };
     },
     computed: {
-      ...mapState(['signUpData'])
+      ...mapState({
+        email:(state: any) => state.login.success.user.email,
+        firstname:(state: any) => state.login.success.user.firstname,
+        lastname:(state: any) => state.login.success.user.lastname,
+        avatar:(state: any) => state.login.success.user.avatar
+      })
     },
     methods: {
       ...mapActions(['signUp', 'resetSignUp']),
@@ -125,33 +130,9 @@
           this.loading = false;
         }
       },
-      passwordMatchCheck() {
-        if (this.formData.password !== this.formData.confirmPassword) {
-          this.password.error = 'Passwords do not match';
-        } else if (!this.formData.password.match(this.password.pattern) ||
-          !this.formData.confirmPassword.match(this.password.pattern)) {
-          this.password.error = 'Passwords must contain an uppercase letter, a number and a special character'
-        } else {
-          this.submitSignUpForm();
-        }
-      },
-      passwordLengthCheck() {
-        if (this.formData.password.length <= 8) {
-          this.password.error = 'Password must be 8 or more characters'
-        } else {
-          this.password.error = '';
-        }
-      },
-      togglePassword() {
-        if (this.password.type === 'password') {
-          this.password.type = 'text';
-        } else {
-          this.password.type = 'password';
-        }
-      }
     },
-    beforeDestroy() {
-      this.resetSignUp();
+    mounted() {
+      document.title = 'Dashboard - Fundall';
     }
   });
 </script>
@@ -161,6 +142,18 @@ h3 {
   font-size: 1.5rem;
   margin: 0;
 }
+
+button {
+  width: fit-content;
+  box-shadow: none;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.signup {
+  background-color: #F2F3F7;
+}
+
 .welcome-back {
   box-shadow: $box-shadow;
   background: $white;
@@ -193,7 +186,7 @@ h3 {
 
 .skate-guy {
   float: right;
-  bottom: 3.5rem;
+  bottom: 3rem;
   position: relative;
 }
 

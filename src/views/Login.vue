@@ -113,6 +113,9 @@
         }
       }
     },
+    mounted() {
+      document.title = 'Login - Fundall';
+    }
   });
 </script>
 
