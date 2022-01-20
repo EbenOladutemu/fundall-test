@@ -1,6 +1,5 @@
 <template>
   <div class="welcome">
-    <img src="./../assets/images/login.svg" alt="Welcome">
     <slot></slot>
   </div>
 </template>

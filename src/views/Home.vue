@@ -9,6 +9,7 @@
       </template>
       <template v-slot:center>
         <Welcome>
+          <img src="./../assets/images/signup.svg" alt="Signup">
           <h1>Fundall Expense Tracker</h1>
           <h2>Mini Project Frontend</h2>
           <p>by Ebenezer Oladutemu</p>

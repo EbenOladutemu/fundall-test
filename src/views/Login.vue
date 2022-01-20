@@ -4,6 +4,7 @@
       <template v-slot:left>
         <Welcome>
           <template>
+            <img src="./../assets/images/login.svg" alt="Signup">
             <h1>
               <span class="text-green">Welcome back!</span> <br>We miss you.
             </h1>
@@ -12,7 +13,7 @@
       </template>
       <template v-slot:right>
         <div class="signup">
-          <form @submit.prevent="signUp">
+          <form @submit.prevent="submitLoginForm">
             <div class="d-flex flex-column-rev">
               <input
                 type="email"
@@ -31,18 +32,21 @@
                 placeholder="Enter Password"
                 required
                 v-model="formData.password"
-                @input="upperCaseCheck"
               />
               <label for="pass">Password</label>
             </div>
-            <small>{{ password.error }}</small>
+            <div class="text-center text-red" v-if="error">
+              {{ error }}
+            </div>
             <div class="btn-container">
-              <Button :disabled="disabled"> LOGIN </Button>
+              <Button :disabled="disabled">
+                {{ loading ? 'LOGGING IN...' : 'LOG IN' }}
+              </Button>
             </div>
           </form>
           <p class="text-center">
             Don't have an account?
-            <router-link to="login">Register here</router-link>
+            <router-link to="signup">Register here</router-link>
           </p>
           <p class="text-center terms">
             By clicking on Login, you agree to our <br> 
@@ -61,6 +65,8 @@
   import Layout from '@/components/Layout.vue';
   import Welcome from '@/components/Welcome.vue';
   import Button from '@/components/Button.vue';
+  import './../styles/signup.scss';
+  import { mapActions } from 'vuex';
 
   export default Vue.extend({
     name: 'Home',
@@ -71,38 +77,32 @@
     },
     data() {
       return {
-        disabled: true,
+        disabled: false,
+        loading: false,
+        error: '',
         password: {
-          error: '',
           type: 'password',
-          pattern: '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W]))',
         },
         formData: {
-          firstName: '',
-          lastName: '',
           email: '',
           password: '',
-          confirmPassword: '',
         },
       };
     },
     methods: {
-      signUp() {
-        this.password.error = '';
-        if (this.formData.password !== this.formData.confirmPassword) {
-          this.password.error = 'Passwords do not match';
-        } else if (!this.formData.password.match(this.password.pattern) ||
-          !this.formData.confirmPassword.match(this.password.pattern)) {
-          this.password.error = 'Passwords must contain an uppercase letter, a number and a special character'
-        }
-      },
-      upperCaseCheck() {
-        if (this.formData.password.length <= 8) {
-          this.password.error = 'Password must be 8 or more characters'
-          this.disabled = true;
-        } else {
-          this.password.error = '';
+      ...mapActions(['login']),
+      async submitLoginForm() {
+        this.disabled = true;
+        this.loading = true;
+        this.error = '';
+        try {
+          await this.login(this.formData);
+        } catch (error: any) {
+          console.log(error.response);
+          this.error = error.response.data.error.message;
+        } finally {
           this.disabled = false;
+          this.loading = false;
         }
       },
       togglePassword() {
@@ -117,89 +117,4 @@
 </script>
 
 <style lang="scss">
-  a {
-    color: $green;
-    text-decoration: none;
-  }
-
-  input {
-    outline: none;
-    border: 1px solid #cad0c9;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border-radius: 0.25rem;
-    margin-top: 0.25rem;
-    color: $grey-light;
-    &:focus {
-      border-color: $green;
-      + label {
-        color: $green;
-      }
-    }
-  }
-
-  form {
-    margin: auto;
-    width: 80%;
-    small {
-      color: red;
-      padding-left: 1rem;
-    }
-  }
-
-  ::placeholder {
-    color: $grey-light;
-    font-style: italic;
-    letter-spacing: $spacing;
-  }
-
-  .checkbox {
-    position: relative;
-    right: -91%;
-    top: -2rem;
-  }
-
-  .signup-layout .layout {
-    flex-direction: column;
-    div.text-left {
-      flex-grow: 1;
-    }
-  }
-
-  .flex-column-rev {
-    padding: 1rem;
-  }
-
-  .signup {
-    background-color: $white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.082937);
-    border-radius: 6px;
-    padding: 1rem;
-    margin: 2rem 0;
-    flex-grow: 1;
-    text-align: left;
-    p {
-      margin-top: 3rem;
-    }
-  }
-
-  .btn-container {
-    text-align: center;
-    padding: 1rem;
-  }
-
-  @media screen and (min-width: 991px) {
-    .checkbox {
-      right: -95%;
-    }
-    .signup-layout .layout {
-      flex-direction: row;
-      align-items: flex-start;
-    }
-
-    .signup {
-      padding: 3rem;
-      margin: 0;
-    }
-  }
 </style>
