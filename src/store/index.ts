@@ -8,7 +8,7 @@ const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
 });
 
-const setToken = (token) => {
+const setToken = (token: string) => {
   instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   instance.defaults.headers.common['Accept'] = 'application/json';
   instance.defaults.headers.common['Content-Type'] = 'application/json';
@@ -24,6 +24,7 @@ export default new Vuex.Store({
   mutations: {
     setLoginSuccess(state, data) {
       state.login = data;
+      setToken(data.success.user.access_token)
     },
     setSignupSuccess(state, data) {
       state.signUpData = data;

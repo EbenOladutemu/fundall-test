@@ -4,98 +4,63 @@
       <template v-slot:left>
         <Welcome>
           <template>
-            <img src="./../assets/images/signup.svg" alt="Welcome">
-            <h1>
-              <span class="text-green">Welcome!</span> Let’s get to know you.
-            </h1>
-            <p>
-              Your first step toward a better financial lifestyle starts here.
-            </p>
+            <div class="d-flex">
+              <img class="avatar" src="./../assets/images/user.svg" alt="Avatar">
+              <div class="profile">
+                <h3>Ebenexzer</h3>
+                <h4>emaol@,so,com</h4>
+              </div>
+            </div>
+            <div class="target">
+              Target Monthly Expenses
+              <h3>N536,000</h3>
+              <div class="progress-bar">
+                <div></div>
+              </div>
+            </div>
+            <Summary></Summary>
           </template>
         </Welcome>
       </template>
       <template v-slot:right>
         <div class="signup">
+          <img class="skate-guy" src="./../assets/images/dashboard.svg" alt="Signup">
+          <div class="welcome-back">
+            <h2>
+              <span class="text-green">Welcome back,</span> .
+            </h2>
+            <span>
+              Now, let’s get your expenses for this month
+            </span>
+          </div>
           <form @submit.prevent="passwordMatchCheck">
-            <div class="d-flex">
-              <div class="d-flex flex-column-rev w-50">
-                <input
-                  type="text"
-                  id="fname"
-                  placeholder="Enter First Name"
-                  required
-                  v-model="formData.firstName"
-                />
-                <label for="fname">First Name</label>
-              </div>
-              <div class="d-flex flex-column-rev w-50">
-                <input
-                  type="text"
-                  id="lname"
-                  placeholder="Enter Last Name"
-                  required
-                v-model="formData.lastName"
-                />
-                <label for="lname">Last Name</label>
-              </div>
-            </div>
             <div class="d-flex flex-column-rev">
               <input
-                type="email"
-                id="email"
-                placeholder="Enter Email"
+                type="number"
                 required
                 v-model="formData.email"
               />
-              <label for="email">Email Address</label>
-            </div>
-            <div class="d-flex flex-column-rev">
-              <input class="checkbox" type="checkbox" @input="togglePassword">
-              <input
-                :type="password.type"
-                id="pass"
-                placeholder="Enter Password"
-                required
-                v-model="formData.password"
-                @input="passwordLengthCheck"
-              />
-              <label for="pass">Password</label>
+              <span>Target Monthly Expenses</span>
             </div>
             <div class="d-flex flex-column-rev">
               <input
-                :type="password.type"
-                id="cpass"
-                placeholder="Confirm Password"
+                type="date"
                 required
-                v-model="formData.confirmPassword"
+                v-model="formData.email"
               />
-              <label for="cpass">Confirm Password</label>
+              <span>Date</span>
             </div>
-            <small>{{ password.error }}</small>
-            <div class="text-center">
-              <span class="text-red" v-if="error">
-                {{ error }}
-              </span>
-              <span v-if="signUpData.success">
-                {{ signUpData.success.message }}. Please <router-link to="/login">LOGIN</router-link>
-              </span>
-            </div>
+            <span>Today's Expenses</span>
+            <Expenses></Expenses>
+            <Expenses></Expenses>
+            <Expenses></Expenses>
+            <Expenses></Expenses>
             <div class="btn-container">
-              <Button :disabled="disabled">
-                 {{ loading ? 'SIGNING UP...' : 'SIGN UP' }}
+              <Button>
+                 {{ loading ? 'Saving...' : 'SAVE TODAY\'S EXPENSES' }}
               </Button>
             </div>
           </form>
-          <p class="text-center">
-            Already have an account?
-            <router-link to="login">Login here</router-link>
-          </p>
-          <p class="text-center terms">
-            By clicking on Signup, you agree to our <br> 
-            <span class="text-green">
-              Terms & Conditions and Privacy Policy
-            </span>
-          </p>
         </div>
       </template>
     </Layout>
@@ -107,6 +72,9 @@
   import Layout from '@/components/Layout.vue';
   import Welcome from '@/components/Welcome.vue';
   import Button from '@/components/Button.vue';
+  import Expenses from '@/components/Expenses.vue';
+  import Summary from '@/components/Summary.vue';
+  import './../styles/signup.scss';
   import { mapActions, mapState } from 'vuex';
 
   export default Vue.extend({
@@ -115,10 +83,11 @@
       Layout,
       Welcome,
       Button,
+      Expenses,
+      Summary
     },
     data() {
       return {
-        disabled: true,
         loading: false,
         error: '',
         success: '',
@@ -144,7 +113,6 @@
       async submitSignUpForm() {
         this.password.error = '';
         console.log(this.formData);
-        this.disabled = true;
         this.loading = true;
         this.error = '';
         try {
@@ -154,7 +122,6 @@
           console.log(error)
           this.error = error.response.data.error.message;
         } finally {
-          this.disabled = false;
           this.loading = false;
         }
       },
@@ -171,10 +138,8 @@
       passwordLengthCheck() {
         if (this.formData.password.length <= 8) {
           this.password.error = 'Password must be 8 or more characters'
-          this.disabled = true;
         } else {
           this.password.error = '';
-          this.disabled = false;
         }
       },
       togglePassword() {
@@ -191,6 +156,62 @@
   });
 </script>
 
-<style lang="scss">
-@import url('./../styles/signup.scss');
+<style lang="scss" scoped>
+h3 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+.welcome-back {
+  box-shadow: $box-shadow;
+  background: $white;
+  border-radius: 5px;
+  padding: 1.5rem;
+  margin-left: 4rem;
+  margin-bottom: 2rem;
+  width: 86%;
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.avatar {
+  background: #C4C4C4;
+  padding: 2rem;
+  border-radius: 1.25rem;
+}
+
+.profile {
+  margin-left: 1rem;
+  h3 {
+    margin-top: 1rem;
+  }
+  h4 {
+    margin-top: 0.5rem;
+  }
+}
+
+.skate-guy {
+  float: right;
+  bottom: 3.5rem;
+  position: relative;
+}
+
+.target {
+  margin-top: 2rem;
+}
+
+.progress-bar {
+  width: 50%;
+  height: 6px;
+  background: #EFEFEF;
+  border-radius: 5px;
+  margin-top: 1rem;
+  div {
+    background: $green;
+    height: 6px;
+    width: 20%;
+    border-radius: 1rem;
+  }
+}
 </style>
