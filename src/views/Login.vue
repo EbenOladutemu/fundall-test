@@ -103,6 +103,7 @@
         } finally {
           this.disabled = false;
           this.loading = false;
+          this.$router.push('/dashboard');
         }
       },
       togglePassword() {
